@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BhaskarMath</title>
+    <title>BhaskarMath | AI Academy</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -53,7 +53,6 @@
             margin-top: 5px;
         }
 
-        /* ÁREA DE INPUT */
         .input-card {
             background: var(--panel);
             padding: 25px;
@@ -93,18 +92,13 @@
             transition: 0.3s;
         }
 
-        .btn-solve:active {
-            transform: scale(0.98);
-        }
-
-        /* RESULTADO */
         #result-box {
             margin-top: 30px;
             background: var(--panel);
             padding: 20px;
             border-radius: 15px;
             border-left: 5px solid var(--gold);
-            display: none; /* Escondido até ter resposta */
+            display: none;
             animation: fadeIn 0.5s ease;
         }
 
@@ -133,80 +127,110 @@
             display: none;
             margin-top: 20px;
         }
+        
+        .reset-btn {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1 class="gold-title">Math Gold <span style="color:white">IA</span></h1>
-        <p class="subtitle">Math studinh and calculating</p>
+        <h1 class="gold-title">BhaskarMath <span style="color:white">IA</span></h1>
+        <p class="subtitle">Advanced math studying and calculating</p>
     </header>
 
     <div class="input-card">
-        <input type="text" id="math-prompt" placeholder="Ex: Como resolver x² - 5x + 6 = 0?">
-        <button class="btn-solve" onclick="askTeacher()">TEACH</button>
+        <input type="text" id="math-prompt" placeholder="Ex: How to solve x² - 5x + 6 = 0?">
+        <button class="btn-solve" onclick="askTeacher()">TEACH ME</button>
+        <center><button class="reset-btn" onclick="resetApiKey()">Reset API Key</button></center>
     </div>
 
-    <div id="loader" class="loading">Loading answer...</div>
+    <div id="loader" class="loading">Professor is writing on the board...</div>
 
     <div id="result-box">
-        <span class="ai-label">🎓 explication:</span>
+        <span class="ai-label">🎓 Teacher's Explanation:</span>
         <div id="ai-text"></div>
     </div>
 </div>
 
 <script type="module">
-  
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // CONFIGURAÇÃO
-    const API_KEY = "COLOQUE_SUA_CHAVE_AQUI"; // <--- TUA CHAVE AQUI
-    const genAI = new GoogleGenerativeAI(API_KEY);
+    // Safe key management for GitHub
+    let API_KEY = localStorage.getItem("bhaskarmat_api_key");
 
     window.askTeacher = async function() {
-        const prompt = document.getElementById('math-prompt').value;
+        const mathPrompt = document.getElementById('math-prompt').value;
         const resultBox = document.getElementById('result-box');
-        const aiText = document.getElementById('ai-text');
-        const loader = document.getElementById('loader');
+        const aiResponseText = document.getElementById('ai-text');
+        const loadingIndicator = document.getElementById('loader');
 
-        if (!prompt) return alert("Escreva uma conta ou dúvida!");
+        if (!mathPrompt) {
+            alert("Please, enter a math problem!");
+            return;
+        }
 
-      
-        loader.style.display = "block";
+        // Security: Ask for key if not present
+        if (!API_KEY) {
+            API_KEY = prompt("Enter your Google AI API Key (Saved locally in your browser):");
+            if (API_KEY) {
+                localStorage.setItem("bhaskarmat_api_key", API_KEY);
+            } else {
+                return;
+            }
+        }
+
+        loadingIndicator.style.display = "block";
         resultBox.style.display = "none";
 
         try {
+            const genAI = new GoogleGenerativeAI(API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            
-            const instrucao = `
-                Você é um professor de matemática de alto nível.
-                Resolva e explique para o aluno: ${prompt}.
-                Siga estas regras:
-                1. Use uma linguagem didática e clara.
-                2. Explique a fórmula utilizada antes de aplicá-la.
-                3. Destaque os resultados importantes.
-                4. Use quebras de linha para não ficar um texto gigante.
+
+            const systemInstruction = `
+                You are a high-level mathematics professor at BhaskarMath Academy.
+                Solve and explain: ${mathPrompt}.
+                Rules:
+                1. Answer in Portuguese.
+                2. Explain the formula before calculating.
+                3. Highlight results and use line breaks.
             `;
 
-            const result = await model.generateContent(instrucao);
+            const result = await model.generateContent(systemInstruction);
             const response = await result.response;
-            const text = response.text();
-
             
-            aiText.innerHTML = text.replace(/\n/g, "<br>");
+            aiResponseText.innerHTML = response.text().replace(/\n/g, "<br>");
             
-            loader.style.display = "none";
+            loadingIndicator.style.display = "none";
             resultBox.style.display = "block";
 
         } catch (error) {
-            loader.style.display = "none";
-            alert("Error.");
+            loadingIndicator.style.display = "none";
             console.error(error);
+            if (error.message.includes("403") || error.message.includes("API_KEY_INVALID")) {
+                alert("Invalid API Key. Resetting...");
+                localStorage.removeItem("bhaskarmat_api_key");
+                API_KEY = null;
+            } else {
+                alert("Connection error.");
+            }
         }
+    }
+
+    window.resetApiKey = function() {
+        localStorage.removeItem("bhaskarmat_api_key");
+        alert("Key removed. You will be asked for a new one on next search.");
+        location.reload();
     }
 </script>
 
 </body>
 </html>
-
