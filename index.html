@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhaskarMath</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        :root {
+            --gold: #FFD700;
+            --dark-gold: #b8860b;
+            --bg: #050505;
+            --panel: #111;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 650px;
+            padding: 30px 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gold-title {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* ÁREA DE INPUT */
+        .input-card {
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--gold);
+        }
+
+        .btn-solve {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            background: linear-gradient(45deg, var(--gold), var(--dark-gold));
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-solve:active {
+            transform: scale(0.98);
+        }
+
+        /* RESULTADO */
+        #result-box {
+            margin-top: 30px;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--gold);
+            display: none; /* Escondido até ter resposta */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .ai-label {
+            color: var(--gold);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        #ai-text {
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            color: var(--gold);
+            font-style: italic;
+            text-align: center;
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 class="gold-title">Math Gold <span style="color:white">IA</span></h1>
+        <p class="subtitle">Math studinh and calculating</p>
+    </header>
+
+    <div class="input-card">
+        <input type="text" id="math-prompt" placeholder="Ex: Como resolver x² - 5x + 6 = 0?">
+        <button class="btn-solve" onclick="askTeacher()">TEACH</button>
+    </div>
+
+    <div id="loader" class="loading">Loading answer...</div>
+
+    <div id="result-box">
+        <span class="ai-label">🎓 explication:</span>
+        <div id="ai-text"></div>
+    </div>
+</div>
+
+<script type="module">
+  
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    // CONFIGURAÇÃO
+    const API_KEY = "COLOQUE_SUA_CHAVE_AQUI"; // <--- TUA CHAVE AQUI
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    window.askTeacher = async function() {
+        const prompt = document.getElementById('math-prompt').value;
+        const resultBox = document.getElementById('result-box');
+        const aiText = document.getElementById('ai-text');
+        const loader = document.getElementById('loader');
+
+        if (!prompt) return alert("Escreva uma conta ou dúvida!");
+
+      
+        loader.style.display = "block";
+        resultBox.style.display = "none";
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            const instrucao = `
+                Você é um professor de matemática de alto nível.
+                Resolva e explique para o aluno: ${prompt}.
+                Siga estas regras:
+                1. Use uma linguagem didática e clara.
+                2. Explique a fórmula utilizada antes de aplicá-la.
+                3. Destaque os resultados importantes.
+                4. Use quebras de linha para não ficar um texto gigante.
+            `;
+
+            const result = await model.generateContent(instrucao);
+            const response = await result.response;
+            const text = response.text();
+
+            
+            aiText.innerHTML = text.replace(/\n/g, "<br>");
+            
+            loader.style.display = "none";
+            resultBox.style.display = "block";
+
+        } catch (error) {
+            loader.style.display = "none";
+            alert("Error.");
+            console.error(error);
+        }
+    }
+</script>
+
+</body>
+</html>
+
