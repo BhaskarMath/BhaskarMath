@@ -32,7 +32,7 @@ The BhaskarMath ecosystem is built with a powerful blend of technologies:
 
 # how to make it "work"?🤔
 simple. First, go to Google AI studio.
-Link: Google AI Studio https://aistudio.google.com/welcome?utm_source=PMAX&utm_medium=display&utm_campaign=Cloud-SS-DR-AIS-FY26-global-pmax-1713578&utm_content=pmax&gad_source=1&gad_campaignid=23417432327&gclid=CjwKCAiA-__MBhAKEiwASBmsBJt_zMBFkkaM5A5uYbXZTWGy0EdTTchJixci9g5TPI7ovoEVeWbcdBoCBwYQAvD_BwE
+Link: https://aistudio.google.com/welcome?utm_source=PMAX&utm_medium=display&utm_campaign=Cloud-SS-DR-AIS-FY26-global-pmax-1713578&utm_content=pmax&gad_source=1&gad_campaignid=23417432327&gclid=CjwKCAiA-__MBhAKEiwASBmsBJt_zMBFkkaM5A5uYbXZTWGy0EdTTchJixci9g5TPI7ovoEVeWbcdBoCBwYQAvD_BwE
 
 click on "create API key", and after, click on "new API key", then, copy the link.
 
