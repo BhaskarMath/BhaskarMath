@@ -31,11 +31,10 @@ The BhaskarMath ecosystem is built with a powerful blend of technologies:
 4.  **Display:** The solution is rendered beautifully on the screen for the student to study.
 
 # how to make it "work"?🤔
-simple. First, go to Google AI studio.
-Link: https://aistudio.google.com/welcome?utm_source=PMAX&utm_medium=display&utm_campaign=Cloud-SS-DR-AIS-FY26-global-pmax-1713578&utm_content=pmax&gad_source=1&gad_campaignid=23417432327&gclid=CjwKCAiA-__MBhAKEiwASBmsBJt_zMBFkkaM5A5uYbXZTWGy0EdTTchJixci9g5TPI7ovoEVeWbcdBoCBwYQAvD_BwE
+simple. First, go to pollinations ai.
+link: https://pollinations.ai/
 
-click on "create API key", and after, click on "new API key", then, copy the link.
-
+click on "create API key", then, paste it on the request.
 ### After it...
 when appears a message saying to you put your API Key on BhaskarMath, you paste it and ready! Your answers done by AI is done!👏👏👏👏👏
 
