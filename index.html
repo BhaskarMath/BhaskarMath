@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="OIvgzp_QKd0d3xJcsX3grlRAuBjDDVz2oQJOUyKPocc" />
-    <title>BhaskarMath | AI Academy</title>
+    <title>BhaskarMath | Academia de IA</title>
 
     <style>
         :root {
@@ -121,20 +121,20 @@
 
 <div class="container">
     <header>
-        <h1 class="gold-title">BhaskarMath <span style="color:white">AI</span></h1>
-        <p class="subtitle">Advanced Mathematics Academy</p>
+        <h1 class="gold-title">BhaskarMath <span style="color:white">IA</span></h1>
+        <p class="subtitle">Academia de Matemática Avançada</p>
     </header>
 
     <div class="input-card">
-        <input type="text" id="math-prompt" placeholder="Ex: Solve x² - 5x + 6 = 0 using Bhaskara">
-        <button class="btn-solve" onclick="askTeacher()">TEACH ME</button>
-        <center><button class="settings-btn" onclick="resetKey()">Reset Pollinations API Key</button></center>
+        <input type="text" id="math-prompt" placeholder="Ex: Resolva x² - 5x + 6 = 0 usando Bhaskara">
+        <button class="btn-solve" onclick="askTeacher()">ME ENSINE</button>
+        <center><button class="settings-btn" onclick="resetKey()">Resetar Chave API Pollinations</button></center>
     </div>
 
-    <div id="loader" class="loading">Professor is analyzing the problem...</div>
+    <div id="loader" class="loading">O Professor está analisando o problema...</div>
 
     <div id="result-box">
-        <span class="ai-label">🎓 Professor's Explanation:</span>
+        <span class="ai-label">🎓 Explicação do Professor:</span>
         <div id="ai-text"></div>
     </div>
 </div>
@@ -150,17 +150,17 @@
         const loadingIndicator = document.getElementById('loader');
 
         if (!mathPrompt) {
-            alert("Please, enter a question!");
+            alert("Por favor, digite uma pergunta!");
             return;
         }
 
         
         if (!POLLINATIONS_KEY) {
-            POLLINATIONS_KEY = prompt("Please enter your Pollinations.ai API Key:");
+            POLLINATIONS_KEY = prompt("Por favor, insira sua Chave API do Pollinations.ai:");
             if (POLLINATIONS_KEY) {
                 localStorage.setItem("bhaskarmat_pollinations_key", POLLINATIONS_KEY);
             } else {
-                alert("An API Key is required to use this teacher.");
+                alert("Uma chave de API é necessária para usar este professor.");
                 return;
             }
         }
@@ -169,8 +169,8 @@
         resultBox.style.display = "none";
 
         try {
-            const systemContext = "You are a professional math teacher at BhaskarMath. Solve the problem step-by-step. Always answer in Portuguese.";
-            
+            // Contexto do sistema em português
+            const systemContext = "Você é um professor de matemática profissional da BhaskarMath. Resolva o problema passo a passo. Sempre responda em Português do Brasil.";
             
             const url = "https://text.pollinations.ai/";
             
@@ -185,18 +185,18 @@
                         { role: "system", content: systemContext },
                         { role: "user", content: mathPrompt }
                     ],
-                    model: "openai", // You can change the model here
+                    model: "openai", 
                     cache: false
                 })
             });
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    alert("Invalid API Key! Please reset and try again.");
+                    alert("Chave API inválida! Por favor, resete a chave e tente novamente.");
                     resetKey();
                     return;
                 }
-                throw new Error("Connection failed");
+                throw new Error("Falha na conexão");
             }
 
             const data = await response.text();
@@ -207,7 +207,7 @@
 
         } catch (error) {
             loadingIndicator.style.display = "none";
-            alert("Connection error with Pollinations.ai");
+            alert("Erro de conexão com Pollinations.ai");
             console.error(error);
         }
     }
@@ -216,7 +216,7 @@
     window.resetKey = function() {
         localStorage.removeItem("bhaskarmat_pollinations_key");
         POLLINATIONS_KEY = null;
-        alert("API Key cleared!");
+        alert("Chave API removida!");
         location.reload();
     }
 </script>
