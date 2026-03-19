@@ -19,7 +19,7 @@ The BhaskarMath ecosystem is built with a powerful blend of technologies:
 | Category | Technology |
 | :--- | :--- |
 | **Frontend** | HTML5, CSS3 (Dark Gold Theme), JavaScript (ES6+) |
-| **AI Engine** | Google Gemini 1.5 Flash API |
+| **AI Engine** | Pollinations.ai API |
 | **Math Engine** | Math.js & SymPy |
 | **Notation** | KaTeX ($LaTeX$ rendering) |
 | **Hosting** | GitHub Pages / Firebase |
