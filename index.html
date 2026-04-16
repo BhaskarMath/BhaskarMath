@@ -3,178 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="OIvgzp_QKd0d3xJcsX3grlRAuBjDDVz2oQJOUyKPocc" />
-    <title>BhaskarMath | Academia de IA</title>
+    <title>BhaskarMath | IA</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
             --gold: #FFD700;
-            --dark-gold: #b8860b;
-            --bg: #050505;
-            --panel: #111;
-            --text: #e0e0e0;
+            --gold-glow: rgba(255, 215, 0, 0.3);
+            --bg: #050507;
+            --card-bg: rgba(15, 15, 20, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f0f0;
+            --text-dim: #a0a0a0;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             margin: 0;
+            overflow-x: hidden;
             display: flex;
             justify-content: center;
             min-height: 100vh;
         }
 
+        #particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -50px;
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: rise linear forwards;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
         .container {
-            width: 95%;
-            max-width: 650px;
-            padding: 30px 15px;
+            width: 90%;
+            max-width: 800px;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .gold-title {
-            color: var(--gold);
-            font-size: 2.5rem;
+            font-size: 3.5rem;
+            font-weight: 900;
             margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(180deg, #fff 40%, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
         }
 
         .subtitle {
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 5px;
+            color: var(--text-dim);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 10px;
         }
 
         .input-card {
-            background: var(--panel);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid #222;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            background: #000;
-            border: 1px solid #333;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
             color: white;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
-            transition: border-color 0.3s;
         }
 
-        input:focus { border-color: var(--gold); }
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+            background: rgba(0, 0, 0, 0.6);
+        }
 
         .btn-solve {
-            width: 100%;
-            padding: 15px;
-            margin-top: 15px;
-            background: linear-gradient(45deg, var(--gold), var(--dark-gold));
-            color: black;
+            background: #ffffff;
+            color: #000;
+            padding: 20px;
             border: none;
-            border-radius: 8px;
-            font-weight: 900;
+            border-radius: 14px;
+            font-weight: 800;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-solve:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn-solve:disabled {
+            opacity: 0.5;
+            transform: none;
         }
 
         #result-box {
-            margin-top: 30px;
-            background: var(--panel);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--gold);
+            margin-top: 40px;
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .ai-label { color: var(--gold); font-weight: bold; display: block; margin-bottom: 15px; }
+        .ai-label {
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        #ai-text { line-height: 1.8; font-size: 1rem; }
+        #ai-text {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #ai-text h1, #ai-text h2 { color: var(--gold); margin-top: 25px; }
+        #ai-text code { background: rgba(255,255,255,0.1); padding: 3px 6px; border-radius: 6px; font-family: monospace; }
+        #ai-text pre { background: #000; padding: 20px; border-radius: 12px; overflow-x: auto; border: 1px solid var(--border); }
 
-        .loading { color: var(--gold); font-style: italic; text-align: center; display: none; margin-top: 20px; }
+        .loader-container {
+            display: none;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.05);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s infinite cubic-bezier(0.5, 0.1, 0.4, 0.9);
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .settings-btn {
             background: none;
             border: none;
-            color: #555;
-            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-size: 0.75rem;
             cursor: pointer;
-            text-decoration: underline;
-            margin-top: 15px;
+            margin-top: 25px;
+            opacity: 0.6;
+            transition: 0.3s;
         }
+
+        .settings-btn:hover { opacity: 1; color: var(--gold); }
     </style>
 </head>
 <body>
 
+<div id="particle-container"></div>
+
 <div class="container">
     <header>
-        <h1 class="gold-title">BhaskarMath <span style="color:white">IA</span></h1>
-        <p class="subtitle">Academia de Matemática Avançada</p>
+        <h1 class="gold-title">BhaskarMath</h1>
+        <p class="subtitle">Neural Mathematics Academy</p>
     </header>
 
     <div class="input-card">
-        <input type="text" id="math-prompt" placeholder="Ex: Resolva x² - 5x + 6 = 0 usando Bhaskara">
-        <button class="btn-solve" onclick="askTeacher()">ME ENSINE</button>
-        <center><button class="settings-btn" onclick="resetKey()">Resetar Chave API Pollinations</button></center>
+        <div class="input-group">
+            <input type="text" id="math-prompt" placeholder="Digite seu problema matemático aqui..." onkeypress="handleKeyPress(event)">
+            <button class="btn-solve" id="btn-main" onclick="askTeacher()">
+                <i class="fas fa-bolt"></i> ANALISAR EQUAÇÃO
+            </button>
+        </div>
+        <center><button class="settings-btn" onclick="resetKey()"><i class="fas fa-sync-alt"></i> RESETAR CONFIGURAÇÕES</button></center>
     </div>
 
-    <div id="loader" class="loading">O Professor está analisando o problema...</div>
+    <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p style="color: var(--gold); font-weight: 600; letter-spacing: 1px;">SINTETIZANDO RESPOSTA...</p>
+    </div>
 
     <div id="result-box">
-        <span class="ai-label">🎓 Explicação do Professor:</span>
+        <div class="ai-label">
+            <i class="fas fa-microchip"></i> Inteligência Artificial BhaskarMath
+        </div>
         <div id="ai-text"></div>
     </div>
 </div>
 
 <script>
-    
+    const emojis = ['🪐', '🪙', '🗝', '✨', '📐', '⚛️', '🧬'];
+    const container = document.getElementById('particle-container');
+
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        particle.style.fontSize = (Math.random() * 10 + 15) + 'px';
+        container.appendChild(particle);
+
+        setTimeout(() => {
+            particle.remove();
+        }, 7000);
+    }
+
+    setInterval(createParticle, 400);
+
     let POLLINATIONS_KEY = localStorage.getItem("bhaskarmat_pollinations_key");
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') askTeacher();
+    }
 
     async function askTeacher() {
         const mathPrompt = document.getElementById('math-prompt').value;
         const resultBox = document.getElementById('result-box');
         const aiResponseText = document.getElementById('ai-text');
-        const loadingIndicator = document.getElementById('loader');
+        const loader = document.getElementById('loader');
+        const btn = document.getElementById('btn-main');
 
-        if (!mathPrompt) {
-            alert("Por favor, digite uma pergunta!");
-            return;
-        }
+        if (!mathPrompt) return;
 
-        
         if (!POLLINATIONS_KEY) {
-            POLLINATIONS_KEY = prompt("Por favor, insira sua Chave API do Pollinations.ai:");
-            if (POLLINATIONS_KEY) {
-                localStorage.setItem("bhaskarmat_pollinations_key", POLLINATIONS_KEY);
-            } else {
-                alert("Uma chave de API é necessária para usar este professor.");
-                return;
-            }
+            POLLINATIONS_KEY = prompt("API Key necessária:");
+            if (POLLINATIONS_KEY) localStorage.setItem("bhaskarmat_pollinations_key", POLLINATIONS_KEY);
+            else return;
         }
 
-        loadingIndicator.style.display = "block";
+        loader.style.display = "block";
         resultBox.style.display = "none";
+        btn.disabled = true;
 
         try {
-        
-            const systemContext = "Você é um professor de matemática profissional da BhaskarMath. Resolva o problema passo a passo. Sempre responda em Português do Brasil.";
-            
-            const url = "https://text.pollinations.ai/";
-            
-            const response = await fetch(url, {
+            const response = await fetch("https://text.pollinations.ai/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -182,41 +299,26 @@
                 },
                 body: JSON.stringify({
                     messages: [
-                        { role: "system", content: systemContext },
+                        { role: "system", content: "Você é um professor de matemática especialista. Use Markdown e LaTeX. Responda em Português." },
                         { role: "user", content: mathPrompt }
                     ],
-                    model: "openai", 
-                    cache: false
+                    model: "openai"
                 })
             });
 
-            if (!response.ok) {
-                if (response.status === 401) {
-                    alert("Chave API inválida! Por favor, resete a chave e tente novamente.");
-                    resetKey();
-                    return;
-                }
-                throw new Error("Falha na conexão");
-            }
-
             const data = await response.text();
-            aiResponseText.innerHTML = data.replace(/\n/g, "<br>");
-            
-            loadingIndicator.style.display = "none";
+            aiResponseText.innerHTML = marked.parse(data);
+            loader.style.display = "none";
             resultBox.style.display = "block";
-
         } catch (error) {
-            loadingIndicator.style.display = "none";
-            alert("Erro de conexão com Pollinations.ai");
-            console.error(error);
+            alert("Erro na conexão.");
+        } finally {
+            btn.disabled = false;
         }
     }
 
-    
     window.resetKey = function() {
         localStorage.removeItem("bhaskarmat_pollinations_key");
-        POLLINATIONS_KEY = null;
-        alert("Chave API removida!");
         location.reload();
     }
 </script>
